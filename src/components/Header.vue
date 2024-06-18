@@ -3,7 +3,7 @@
         <div class="nav-items first">
             <RouterLink to="/" class="nav-link">Home</RouterLink>
             <RouterLink to="/cart" class="nav-link">
-                <v-badge color="blue" :content="cart.length">
+                <v-badge color="blue" :content="cartStore.cartLength">
                     <v-icon size="30">mdi-cart</v-icon>
                 </v-badge>
             </RouterLink>
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import useCartStore from '../stores/cart'
-const { cart } = useCartStore()
+const cartStore = useCartStore()
 
 
 </script>

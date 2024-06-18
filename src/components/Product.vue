@@ -26,7 +26,7 @@ const productSample: Product = {
     id: '1huwhdeuw',
     title: "product Title",
     amount: 200,
-    discount: 12,
+    discount: 10,
     description: "This is the product for this produuct",
     image: "/regImg.png",
 }

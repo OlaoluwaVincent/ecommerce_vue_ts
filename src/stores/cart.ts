@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 const useCartStore = defineStore(
   'cart',
   () => {
-    const cart = ref<Product[] | []>([]);
+    const cart = ref<Product[]>([]);
     const cartLength = computed(() => cart.value.length);
 
     const price = computed(() => {
@@ -23,17 +23,22 @@ const useCartStore = defineStore(
       if (cart.value.length) {
         const totalPrice = cart.value.reduce((acc, product) => {
           if (product.discount) {
-            return acc + product.discount;
+            return acc + (product.amount / 100) * product.discount;
+          } else {
+            return acc + product.amount;
           }
           return acc;
         }, 0);
-        return totalPrice.toFixed(2);
+        return totalPrice;
       }
+      return 0;
     });
 
     const tax = computed(() => {
       const taxRate: number = 0.075;
-      return (taxRate * price?.value).toFixed(2);
+      if (!price.value) return 0;
+      if (discount.value) return taxRate * (price.value - discount.value);
+      return taxRate * price?.value;
     });
 
     function addToCart(value: Product) {
