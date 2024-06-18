@@ -10,16 +10,26 @@
         </div>
 
         <div class="nav-items second">
-            <RouterLink to="/login" class="nav-link">Login</RouterLink>
-            <RouterLink to="/register" class="nav-link">Register</RouterLink>
+            <RouterLink v-if="!auth.token" to="/login" class="nav-link">Login</RouterLink>
+            <RouterLink v-if="!auth.token" to="/register" class="nav-link">Register</RouterLink>
+
+            <v-btn v-else variant="text" @click="handleLogout" color="blue-darken-4">Logout</v-btn>
         </div>
     </nav>
 </template>
 
 <script setup lang="ts">
+import useAuth from '@/stores/auth';
 import useCartStore from '../stores/cart'
+import { useRouter } from 'vue-router';
 const cartStore = useCartStore()
+const auth = useAuth()
+const router = useRouter()
 
+const handleLogout = () => {
+    auth.logout()
+    router.push('/')
+}
 
 </script>
 

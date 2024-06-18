@@ -1,10 +1,24 @@
 import useAuth from '@/stores/auth';
+import type { User } from '@/utils/typings';
 import axios, { AxiosError } from 'axios';
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
-const useAxiosLogin = async (username: string, password: string) => {
+interface LoginRes {
+  isLoading: boolean;
+  error: string;
+  data: User | null;
+}
+
+const useAxiosLogin = async (
+  username: string,
+  password: string
+): Promise<LoginRes> => {
   const auth = useAuth();
-  const response = ref(null);
+  const response = reactive<LoginRes>({
+    isLoading: true,
+    error: '',
+    data: null,
+  });
   const baseURL = import.meta.env.VITE_BACKEND_URL;
   try {
     const res = await axios.post(`${baseURL}/users/login`, {
@@ -12,16 +26,19 @@ const useAxiosLogin = async (username: string, password: string) => {
       username,
     });
     if (!res.data) {
-      throw new Error('Unable to  login');
+      throw new Error('Unable to login');
     }
 
     auth.setUser(res.data);
-    return (response.value = res.data);
+    response.data = res.data;
   } catch (error: any) {
     const error_axios = error as AxiosError;
-    // console.log(error_axios.response?.data);
-    return error_axios.response?.data;
+    response.error = error_axios.response?.data as string;
+  } finally {
+    response.isLoading = false;
   }
+
+  return response;
 };
 
 export default useAxiosLogin;
