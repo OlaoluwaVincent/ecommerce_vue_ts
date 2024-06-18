@@ -33,13 +33,7 @@ const total = computed(() =>
 
 );
 
-// const form = useForm({
-//     amount: total.value,
-//     metadata: cartStore.cart.map((item) => ({
-//         id: item.id,
-//         title: item.title,
-//     })),
-// });
+
 </script>
 
 <style scoped>
