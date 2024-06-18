@@ -1,8 +1,11 @@
 <template>
-    <input :id="id" :type="type ?? 'text'" :placeholder="placeholder" class="input">
+    <input v-model="model" :id="id" :type="type ?? 'text'" required :placeholder="placeholder" class="input">
 </template>
 
 <script setup lang="ts">
+
+const model = defineModel('model')
+
 defineProps({
     type: {
         type: String,
@@ -31,5 +34,9 @@ defineProps({
 
 .input::placeholder {
     font-size: 90%
+}
+
+.input:focus {
+    outline-color: teal;
 }
 </style>

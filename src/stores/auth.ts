@@ -12,9 +12,19 @@ const useAuth = defineStore(
       }
       return null;
     });
+
+    function setUser(data: User) {
+      user.value = data;
+    }
+
+    function logout() {
+      user.value = undefined;
+    }
     return {
       user,
       token,
+      setUser,
+      logout,
     };
   },
   { persist: true }

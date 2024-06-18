@@ -10,7 +10,8 @@ export interface Product {
 export interface User {
   id: string;
   email: string;
-  fullname: string;
+  name: string;
   role: string;
   token: string;
+  username: string;
 }

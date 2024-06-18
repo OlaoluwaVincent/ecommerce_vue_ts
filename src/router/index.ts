@@ -10,6 +10,7 @@ import AuthLayout from '@/layout/AuthLayout.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
 import handleRouteProtection from './protectedRoutes';
+import Dashboard from '@/views/Dashboard.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,7 +30,7 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/Dashboard.vue'),
+      component: Dashboard,
       meta: { layout: DefaultLayout, requiresAuth: true },
       beforeEnter: (to, from, next) => handleRouteProtection(to, next),
     },
