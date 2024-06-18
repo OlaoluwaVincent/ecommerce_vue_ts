@@ -6,3 +6,11 @@ export interface Product {
   description: string;
   image: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  fullname: string;
+  role: string;
+  token: string;
+}

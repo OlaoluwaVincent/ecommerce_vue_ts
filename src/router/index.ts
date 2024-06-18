@@ -1,9 +1,15 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  type NavigationGuardNext,
+  type RouteLocationNormalized,
+} from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import DefaultLayout from '@/layout/DefaultLayout.vue';
 import AuthLayout from '@/layout/AuthLayout.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
+import handleRouteProtection from './protectedRoutes';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,7 +24,14 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: () => import('../views/CartView.vue'),
-      meta: { layout: DefaultLayout },
+      meta: { layout: DefaultLayout, requiresAuth: true },
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/Dashboard.vue'),
+      meta: { layout: DefaultLayout, requiresAuth: true },
+      beforeEnter: (to, from, next) => handleRouteProtection(to, next),
     },
     {
       path: '/login',
