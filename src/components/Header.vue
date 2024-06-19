@@ -1,10 +1,14 @@
 <template>
     <nav class="header">
         <div class="nav-items first">
-            <RouterLink to="/" class="nav-link">Home</RouterLink>
+            <RouterLink to="/" class="nav-link"><v-icon>mdi-home</v-icon></RouterLink>
+            <RouterLink v-if="auth.token" to="/dashboard" class="nav-link !text-base">
+                <v-icon>mdi-view-dashboard</v-icon>
+            </RouterLink>
+
             <RouterLink to="/cart" class="nav-link">
                 <v-badge color="blue" :content="cartStore.cartLength">
-                    <v-icon size="30">mdi-cart</v-icon>
+                    <v-icon>mdi-cart</v-icon>
                 </v-badge>
             </RouterLink>
         </div>
@@ -13,8 +17,8 @@
             <RouterLink v-if="!auth.token" to="/login" class="nav-link">Login</RouterLink>
             <RouterLink v-if="!auth.token" to="/register" class="nav-link">Register</RouterLink>
 
-            <RouterLink v-if="auth.token" to="/dashboard" class="nav-link !text-base">Dashboard</RouterLink>
-            <v-btn v-if="auth.token" variant="text" @click="handleLogout" color="blue-darken-4">Logout</v-btn>
+            <v-btn v-if="auth.token" variant="text" @click="handleLogout" class="!text-sm"
+                color="blue-darken-4">Logout</v-btn>
         </div>
     </nav>
 </template>
@@ -50,7 +54,7 @@ const handleLogout = () => {
 
 .nav-items {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
 }
 
@@ -58,13 +62,24 @@ const handleLogout = () => {
     text-align: center;
     text-decoration: none;
     color: maroon;
-    font-size: 24px;
+    font-size: 16px;
     z-index: 10;
     position: relative;
+    padding: 8px;
 }
 
 .router-link-active {
     border: 1px dotted maroon;
-    padding: 8px 24px;
+}
+
+@media (width>=768px) {
+    .nav-items {
+        gap: 20px;
+    }
+
+    .nav-link {
+        font-size: 24px;
+        padding: 8px 16px;
+    }
 }
 </style>

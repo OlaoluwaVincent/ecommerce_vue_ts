@@ -21,7 +21,7 @@ const useAxiosLogin = async (
   });
   const baseURL = import.meta.env.VITE_BACKEND_URL;
   try {
-    const res = await axios.post(`${baseURL}/users/login`, {
+    const res = await axios.post(`${baseURL}users/login`, {
       password,
       username,
     });

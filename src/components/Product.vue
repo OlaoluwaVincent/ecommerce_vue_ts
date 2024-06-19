@@ -1,22 +1,28 @@
 <template>
     <section class="card">
         <div class="title capitalize font-semibold">
-            <h3>{{ productSample.title }}</h3>
-            <p :class="productSample.discount && 'text-red-300'"> &#x20A6;{{ productSample.amount }}</p>
-            <p v-if="productSample.discount"> &#x20A6;{{ productSample.amount - (productSample.amount / 100 *
-                productSample.discount) }}</p>
-        </div>
-        <div class="body">
+            <h3>{{ product.name }}</h3>
+            <p :class="product.discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
+                }}</p>
 
-            <img src="/regImg.png" alt="">
+            <p v-if="product.discount"> &#x20A6;{{ product.price
+                - (product.price
+                    / 100 *
+                    product.discount) }}</p>
         </div>
+
+        <div class="body">
+            <img :src="product.images[0].url" :alt="product.name">
+        </div>
+
         <div class="actions">
             <v-btn color="success">Buy Now</v-btn>
-            <v-btn v-if="!exists" color="primary" @click="addToCart(productSample)">
+
+            <v-btn v-if="!exists" color="primary" @click="addToCart(product)">
                 <v-icon>mdi-cart</v-icon>
             </v-btn>
 
-            <v-btn v-else color="error" @click="removeFromCart(productSample.id)">
+            <v-btn v-else color="error" @click="removeFromCart(product.id)">
                 <v-icon>mdi-cart-off</v-icon>
             </v-btn>
         </div>
@@ -24,20 +30,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type PropType } from 'vue';
 import useCartStore from '../stores/cart'
 import type { Product } from '../utils/typings'
 const { addToCart, checkExisting, removeFromCart } = useCartStore()
-const productSample: Product = {
-    id: '1huwhdeuw',
-    title: "product Title",
-    amount: 200,
-    discount: 10,
-    description: "This is the product for this produuct",
-    image: "/regImg.png",
-}
 
-const exists = computed(() => checkExisting(productSample.id))
+const props = defineProps({
+    product: {
+        type: Object as PropType<Product>,
+        required: true
+    }
+})
+
+
+const exists = computed(() => checkExisting(props.product.id))
 </script>
 
 <style scoped>

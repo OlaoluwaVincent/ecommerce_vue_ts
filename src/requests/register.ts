@@ -26,7 +26,7 @@ const useAxiosRegister = async (data: Params): Promise<LoginRes> => {
   });
   const baseURL = import.meta.env.VITE_BACKEND_URL;
   try {
-    const res = await axios.post(`${baseURL}/users/register`, { ...data });
+    const res = await axios.post(`${baseURL}users/register`, { ...data });
 
     response.data = res.data;
   } catch (error: any) {

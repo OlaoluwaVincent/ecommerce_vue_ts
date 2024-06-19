@@ -1,9 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  type NavigationGuardNext,
-  type RouteLocationNormalized,
-} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import DefaultLayout from '@/layout/DefaultLayout.vue';
 import AuthLayout from '@/layout/AuthLayout.vue';

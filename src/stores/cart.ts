@@ -11,7 +11,7 @@ const useCartStore = defineStore(
     const price = computed(() => {
       if (cart.value.length) {
         const totalPrice = cart.value.reduce(
-          (acc, product) => acc + product.amount,
+          (acc, product) => acc + product.price,
           0
         );
         return totalPrice;
@@ -23,9 +23,9 @@ const useCartStore = defineStore(
       if (cart.value.length) {
         const totalPrice = cart.value.reduce((acc, product) => {
           if (product.discount) {
-            return acc + (product.amount / 100) * product.discount;
+            return acc + (product.price / 100) * product.discount;
           } else {
-            return acc + product.amount;
+            return acc + product.price;
           }
           return acc;
         }, 0);

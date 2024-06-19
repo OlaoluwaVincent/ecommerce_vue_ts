@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import Product from '../components/Product.vue'
+import { getAllProducts } from '@/requests/product';
+import Product from '../components/Product.vue';
+import { onMounted, ref } from 'vue';
+import type { ProductResponse } from '@/utils/typings';
+
+
+
+const data = ref<ProductResponse>();
+
+onMounted(async () => {
+  return data.value = await getAllProducts()
+})
 </script>
 
 <template>
   <main style="padding: 20px 5%;">
     <h1>Shop with <span id="logo">EasyShop</span></h1>
     <section class="products">
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
-      <Product />
+      <Product v-for="product in data?.data" :key="product.id" :product="product" />
     </section>
   </main>
 </template>

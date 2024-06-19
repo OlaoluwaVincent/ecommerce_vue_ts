@@ -40,7 +40,7 @@ const total = computed(() =>
 
 function handleClick() {
     if (!auth.user) {
-        return router.push("/login")
+        return router.push("/login?redirect=cart")
     }
 
 

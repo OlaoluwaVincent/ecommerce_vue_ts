@@ -1,10 +1,11 @@
 export interface Product {
   id: string;
-  title: string;
-  amount: number;
+  name: string;
+  price: number;
   discount: number;
+  quantity: number;
   description: string;
-  image: string;
+  images: ProductImages[];
 }
 
 export interface User {
@@ -14,4 +15,15 @@ export interface User {
   role: string;
   token: string;
   username: string;
+}
+
+export interface ProductResponse {
+  isLoading: boolean;
+  error: string;
+  data: Product[];
+}
+
+interface ProductImages {
+  url: string;
+  public_id: string;
 }

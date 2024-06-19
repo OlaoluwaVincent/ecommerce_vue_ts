@@ -22,7 +22,7 @@ import InputLabel from '@/components/InputLabel.vue';
 import InputText from '@/components/InputText.vue'
 import useAxiosLogin from '@/requests/login';
 import useAuth from '@/stores/auth';
-import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -44,7 +44,8 @@ async function login() {
     const response = await useAxiosLogin(data.username, data.password)
     loading.value = response.isLoading;
     if (response.data) {
-        router.push('/dashboard')
+        const location = route.query.redirect?.toString() || '/dashboard'
+        router.push(location)
     } else {
         data.error = response.error;
     }
