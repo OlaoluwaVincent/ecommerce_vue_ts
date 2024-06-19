@@ -9,7 +9,7 @@
             </RouterLink>
         </div>
 
-        <div class="nav-items second">
+        <div class="nav-items">
             <RouterLink v-if="!auth.token" to="/login" class="nav-link">Login</RouterLink>
             <RouterLink v-if="!auth.token" to="/register" class="nav-link">Register</RouterLink>
 

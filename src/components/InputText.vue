@@ -1,5 +1,6 @@
 <template>
-    <input v-model="model" :id="id" :type="type ?? 'text'" required :placeholder="placeholder" class="input">
+    <input v-model="model" :id="id" :type="type ?? 'text'" required :placeholder="placeholder"
+        class="input disabled:cursor-not-allowed">
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-    <section class="login">
+    <form @submit.prevent="login" class="login">
         <p v-if="data.error" class="text-red-600 font-bold text-sm text-center">{{ data.error }}</p>
 
         <div>
@@ -30,12 +30,12 @@
         <p v-if="checks.passwordLength" class="text-red-600 font-bold text-sm">Passwords must be atleast 8 characters
         </p>
 
-        <v-btn type="button" color="green-darken-3" block :disabled="checks.loading" @click="login">Register</v-btn>
+        <v-btn type="submit" color="green-darken-3" block :disabled="checks.loading">Register</v-btn>
 
         <div>
             <p>Already have an account? <router-link to="/login" class="text-blue">Login</router-link></p>
         </div>
-    </section>
+    </form>
 </template>
 
 <script setup lang="ts">
@@ -68,7 +68,6 @@ function handleLengthCheck(e: any) {
         if (cPassword.value) {
             cPassword.value.disabled = true;
         }
-        return
     } else {
         checks.passwordLength = false;
         cPassword.value.disabled = false;
