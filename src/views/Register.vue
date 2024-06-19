@@ -114,10 +114,17 @@ async function login() {
 <style scoped>
 .login {
     width: max-content;
+    max-width: 90%;
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+@media (width>=768px) {
+    .login {
+        max-width: 100%;
+    }
 }
 
 article {

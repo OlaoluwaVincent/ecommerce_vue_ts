@@ -40,10 +40,6 @@ onBeforeMount(() => {
     if (auth.token) return router.push('/dashboard')
 })
 
-
-
-
-
 async function login() {
     const response = await useAxiosLogin(data.username, data.password)
     loading.value = response.isLoading;
