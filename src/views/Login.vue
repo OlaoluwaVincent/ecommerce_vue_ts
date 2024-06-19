@@ -22,13 +22,19 @@ import InputLabel from '@/components/InputLabel.vue';
 import InputText from '@/components/InputText.vue'
 import useAxiosLogin from '@/requests/login';
 import useAuth from '@/stores/auth';
-import { onBeforeMount, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
+const route = useRoute()
 const auth = useAuth()
 const loading = ref(false)
 
+const data = reactive({
+    username: route.query.username?.toString() || '',
+    password: '',
+    error: ''
+})
 
 onBeforeMount(() => {
     if (auth.token) return router.push('/dashboard')
@@ -37,11 +43,6 @@ onBeforeMount(() => {
 
 
 
-const data = reactive({
-    username: '',
-    password: '',
-    error: ''
-})
 
 async function login() {
     const response = await useAxiosLogin(data.username, data.password)
@@ -52,6 +53,7 @@ async function login() {
         data.error = response.error;
     }
 }
+
 </script>
 
 <style scoped>

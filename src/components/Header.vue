@@ -13,7 +13,8 @@
             <RouterLink v-if="!auth.token" to="/login" class="nav-link">Login</RouterLink>
             <RouterLink v-if="!auth.token" to="/register" class="nav-link">Register</RouterLink>
 
-            <v-btn v-else variant="text" @click="handleLogout" color="blue-darken-4">Logout</v-btn>
+            <RouterLink v-if="auth.token" to="/dashboard" class="nav-link !text-base">Dashboard</RouterLink>
+            <v-btn v-if="auth.token" variant="text" @click="handleLogout" color="blue-darken-4">Logout</v-btn>
         </div>
     </nav>
 </template>

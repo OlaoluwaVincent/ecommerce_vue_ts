@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-const model = defineModel('model')
+const model = defineModel()
 
 defineProps({
     type: {
