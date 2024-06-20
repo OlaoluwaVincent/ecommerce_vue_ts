@@ -1,11 +1,12 @@
 export interface Product {
   id: string;
   name: string;
-  price: number;
-  discount: number;
-  quantity: number;
-  description: string;
   images: ProductImages[];
+  price: number | undefined;
+  discount: number | undefined;
+  description: string;
+  quantity: number;
+  userId: string | null;
 }
 
 export interface User {

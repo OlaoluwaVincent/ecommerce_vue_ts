@@ -30,12 +30,6 @@ import Checkout from "@/components/Checkout.vue";
 
 import useCartStore from "@/stores/cart";
 
-const props = defineProps({
-    enrolled_courses: Array,
-    errors: Object,
-    auth: Object,
-})
-
 const cartStore = useCartStore();
 
 </script>

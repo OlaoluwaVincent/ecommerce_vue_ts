@@ -15,7 +15,7 @@ onMounted(async () => {
 
 <template>
   <main style="padding: 20px 5%;">
-    <h1>Shop with <span id="logo">EasyShop</span></h1>
+    <h1 class="logo-h1">Shop with <span id="logo">EasyShop</span></h1>
     <section class="products">
       <Product v-for="product in data?.data" :key="product.id" :product="product" />
     </section>
@@ -23,8 +23,8 @@ onMounted(async () => {
 </template>
 
 
-<style scoped>
-h1 {
+<style>
+.logo-h1 {
   margin-bottom: 30px;
 }
 

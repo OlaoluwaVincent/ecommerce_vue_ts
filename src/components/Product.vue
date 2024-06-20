@@ -5,7 +5,7 @@
             <p :class="product.discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
                 }}</p>
 
-            <p v-if="product.discount"> &#x20A6;{{ product.price
+            <p v-if="product.discount && product.price"> &#x20A6;{{ product.price
                 - (product.price
                     / 100 *
                     product.discount) }}</p>
@@ -16,13 +16,21 @@
         </div>
 
         <div class="actions">
-            <v-btn color="success">Buy Now</v-btn>
+            <v-btn v-if="!owner" color="success">Buy Now</v-btn>
+            <v-btn v-if="owner" color="warning" @click="setProductAndNavigate">
+                <v-icon>mdi-pencil</v-icon>
+            </v-btn>
 
-            <v-btn v-if="!exists" color="primary" @click="addToCart(product)">
+
+            <v-btn v-if="owner" color="error" @click="addToCart(product)">
+                <v-icon>mdi-delete</v-icon>
+            </v-btn>
+
+            <v-btn v-if="!exists && !owner" color="primary" @click="addToCart(product)">
                 <v-icon>mdi-cart</v-icon>
             </v-btn>
 
-            <v-btn v-else color="error" @click="removeFromCart(product.id)">
+            <v-btn v-if="exists && !owner" color="error" @click="removeFromCart(product.id)">
                 <v-icon>mdi-cart-off</v-icon>
             </v-btn>
         </div>
@@ -33,17 +41,29 @@
 import { computed, type PropType } from 'vue';
 import useCartStore from '../stores/cart'
 import type { Product } from '../utils/typings'
+import { useProductStore } from '@/stores/product';
+import { useRouter } from 'vue-router';
+
 const { addToCart, checkExisting, removeFromCart } = useCartStore()
+const productStore = useProductStore()
+const router = useRouter()
 
 const props = defineProps({
     product: {
         type: Object as PropType<Product>,
         required: true
-    }
+    },
+    owner: Boolean
 })
 
 
 const exists = computed(() => checkExisting(props.product.id))
+
+const setProductAndNavigate = (routeName: string) => {
+    productStore.setProduct(props.product);
+    router.push({ name: 'edit' });
+};
+
 </script>
 
 <style scoped>

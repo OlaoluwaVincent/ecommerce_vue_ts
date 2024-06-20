@@ -7,8 +7,12 @@ const axiosInstance: Instance = axios.create({
 
 const store = localStorage.getItem('user');
 if (store !== null && store !== undefined) {
-  const { token } = JSON.parse(store).user;
-  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  const user = JSON.parse(store);
+  if (user.user.token) {
+    axiosInstance.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${user.user.token}`;
+  }
 } else {
   delete axiosInstance.defaults.headers.common['Authorization'];
 }
