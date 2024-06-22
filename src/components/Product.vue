@@ -2,6 +2,15 @@
     <section class="card">
         <div class="title capitalize font-semibold">
             <h3>{{ product.name }}</h3>
+        </div>
+
+        <div class="body">
+            <div class="w-[230px] h-[200px]">
+                <img :src="product.images[0].url" :alt="product.name">
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center -mt-2">
             <p :class="product.discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
                 }}</p>
 
@@ -10,11 +19,6 @@
                     / 100 *
                     product.discount) }}</p>
         </div>
-
-        <div class="body">
-            <img :src="product.images[0].url" :alt="product.name">
-        </div>
-
         <div class="actions">
             <v-btn v-if="!owner" color="success">Buy Now</v-btn>
             <v-btn v-if="owner" color="warning" @click="setProductAndNavigate">
@@ -97,6 +101,13 @@ function deletePro() {
 .actions {
     display: flex;
     justify-content: space-between;
+    margin-top: -10px;
+}
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 img {

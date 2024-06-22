@@ -36,14 +36,14 @@ onMounted(async () => {
 
 .products {
   display: grid;
-  grid-template-columns: minmax(200px, 400px);
+  grid-template-columns: minmax(200px, 300px);
   gap: 20px;
 }
 
 @media (width>=540px) {
   .products {
     display: grid;
-    grid-template-columns: repeat(2, minmax(200px, 400px));
+    grid-template-columns: repeat(2, minmax(220px, 400px));
     gap: 20px;
   }
 }

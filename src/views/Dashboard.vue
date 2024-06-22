@@ -2,6 +2,10 @@
     <h3 class="text-center font-bold text-red-900 text-xl my-5">
         My Products
     </h3>
+    <RouterLink :to="{ name: 'create' }">
+        <v-btn color="success" variant="tonal">New Product</v-btn>
+    </RouterLink>
+
     <main style="padding: 20px 5%;">
         <section class="products">
             <Product v-for="product in data?.data" :key="product.id" :product="product" owner />

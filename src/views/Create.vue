@@ -44,6 +44,7 @@ import { useProductStore } from '@/stores/product';
 import type { ProductImages, Product } from '@/utils/typings';
 import { useRoute, useRouter } from 'vue-router';
 
+
 const productStore = useProductStore();
 const route = useRoute()
 const router = useRouter()
