@@ -12,6 +12,12 @@ const useAuth = defineStore(
       }
       return null;
     });
+    const refreshToken = computed(() => {
+      if (user.value) {
+        return user.value.refreshToken;
+      }
+      return null;
+    });
 
     function setUser(data: User) {
       user.value = data;
@@ -23,6 +29,7 @@ const useAuth = defineStore(
     return {
       user,
       token,
+      refreshToken,
       setUser,
       logout,
     };

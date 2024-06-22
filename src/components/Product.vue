@@ -22,7 +22,7 @@
             </v-btn>
 
 
-            <v-btn v-if="owner" color="error" @click="addToCart(product)">
+            <v-btn v-if="owner" color="error" @click="deletePro">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
 
@@ -43,6 +43,7 @@ import useCartStore from '../stores/cart'
 import type { Product } from '../utils/typings'
 import { useProductStore } from '@/stores/product';
 import { useRouter } from 'vue-router';
+import { deleteProduct } from '@/requests/product';
 
 const { addToCart, checkExisting, removeFromCart } = useCartStore()
 const productStore = useProductStore()
@@ -64,6 +65,12 @@ const setProductAndNavigate = (routeName: string) => {
     router.push({ name: 'edit' });
 };
 
+
+
+function deletePro() {
+    deleteProduct(props.product.id)
+    router.push({ name: 'dashboard' });
+}
 </script>
 
 <style scoped>

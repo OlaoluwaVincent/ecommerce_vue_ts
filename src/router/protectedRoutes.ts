@@ -1,3 +1,4 @@
+import useAuth from '@/stores/auth';
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
 function handleRouteProtection(
@@ -6,11 +7,11 @@ function handleRouteProtection(
 ) {
   const requiresAuth = to.meta.requiresAuth as boolean | undefined;
   const localStore = localStorage.getItem('user');
+  const auth = useAuth();
 
-  if (localStore) {
-    const { user } = JSON.parse(localStore);
+  if (auth.token) {
     if (requiresAuth) {
-      if (user && user.token) {
+      if (auth.token) {
         next();
       } else {
         // console.log('Redirecting to login from protected route.');
@@ -21,7 +22,6 @@ function handleRouteProtection(
     }
   } else {
     if (requiresAuth) {
-      // console.log('Redirecting to login from protected route.');
       next('/login');
     } else {
       next();

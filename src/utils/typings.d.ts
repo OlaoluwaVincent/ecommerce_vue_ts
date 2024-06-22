@@ -7,6 +7,7 @@ export interface Product {
   description: string;
   quantity: number;
   userId: string | null;
+  refreshToken: string;
 }
 
 export interface User {
@@ -15,6 +16,7 @@ export interface User {
   name: string;
   role: string;
   token: string;
+  refreshToken: string;
   username: string;
 }
 
