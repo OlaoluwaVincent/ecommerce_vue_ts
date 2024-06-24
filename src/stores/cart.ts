@@ -11,7 +11,7 @@ const useCartStore = defineStore(
     const price = computed(() => {
       if (cart.value.length) {
         const totalPrice = cart.value.reduce(
-          (acc, product) => acc + product.price,
+          (acc, product) => acc + product.price!,
           0
         );
         return totalPrice;
@@ -23,9 +23,9 @@ const useCartStore = defineStore(
       if (cart.value.length) {
         const totalPrice = cart.value.reduce((acc, product) => {
           if (product.discount) {
-            return acc + (product.price / 100) * product.discount;
+            return acc + (product.price! / 100) * product.discount;
           } else {
-            return acc + product.price;
+            return acc + product.price!;
           }
           return acc;
         }, 0);
@@ -37,8 +37,12 @@ const useCartStore = defineStore(
     const tax = computed(() => {
       const taxRate: number = 0.075;
       if (!price.value) return 0;
-      if (discount.value) return taxRate * (price.value - discount.value);
-      return taxRate * price?.value;
+      if (discount.value) {
+        return parseFloat(
+          (taxRate * (price.value - discount.value)).toFixed(2)
+        );
+      }
+      return parseFloat((taxRate * price.value).toFixed(2));
     });
 
     function addToCart(value: Product) {

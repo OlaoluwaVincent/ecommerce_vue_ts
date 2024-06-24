@@ -1,26 +1,23 @@
 <template>
-    <section class="card">
-        <div class="title capitalize font-semibold">
+    <section class="card bg-gray-900 max-w-[250px]">
+        <div class="title capitalize font-semibold text-sm sm:text-base">
             <h3>{{ product.name }}</h3>
         </div>
 
         <div class="body">
-            <div class="w-[230px] h-[200px]">
+            <div class="w-[120px] aspect-square sm:aspect-auto sm:w-[230px] sm:h-[120px]">
                 <img :src="product.images[0].url" :alt="product.name">
             </div>
         </div>
 
         <div class="flex justify-between items-center -mt-2">
-            <p :class="product.discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
+            <p :class="discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
                 }}</p>
 
-            <p v-if="product.discount && product.price"> &#x20A6;{{ product.price
-                - (product.price
-                    / 100 *
-                    product.discount) }}</p>
+            <p v-if="discount && product.price"> &#x20A6; {{ discount }}</p>
         </div>
         <div class="actions">
-            <v-btn v-if="!owner" color="success">Buy Now</v-btn>
+            <v-btn v-if="!owner" color="success"> <v-icon>mdi-shopping</v-icon> </v-btn>
             <v-btn v-if="owner" color="warning" @click="setProductAndNavigate">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
@@ -61,10 +58,14 @@ const props = defineProps({
     owner: Boolean
 })
 
-
 const exists = computed(() => checkExisting(props.product.id))
+const discount = computed(() => {
+    if (props.product.price && props.product.discount) {
+        return props.product.price - (props.product.price * (props.product.discount / 100))
+    }
+})
 
-const setProductAndNavigate = (routeName: string) => {
+const setProductAndNavigate = () => {
     productStore.setProduct(props.product);
     router.push({ name: 'edit' });
 };
@@ -79,13 +80,13 @@ function deletePro() {
 
 <style scoped>
 .card {
-    background: #fff;
-    color: #222;
+    color: #fff;
     border-radius: 10px;
     padding: 20px;
     display: flex;
     gap: 20px;
     flex-direction: column;
+    width: 100%;
 }
 
 .title {
@@ -102,6 +103,7 @@ function deletePro() {
     display: flex;
     justify-content: space-between;
     margin-top: -10px;
+    gap: 20px;
 }
 
 .body {
@@ -116,6 +118,6 @@ img {
     max-height: 200px;
     object-fit: cover;
     object-position: center;
-    mix-blend-mode: darken;
+    mix-blend-mode: exclusion;
 }
 </style>

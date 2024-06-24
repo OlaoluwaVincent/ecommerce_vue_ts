@@ -7,6 +7,7 @@ import Register from '@/views/Register.vue';
 import handleRouteProtection from './protectedRoutes';
 import Dashboard from '@/views/Dashboard.vue';
 import Create from '@/views/Create.vue';
+import routeGuard from './roleGuard';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,22 +28,40 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard,
-      meta: { layout: DefaultLayout, requiresAuth: true },
-      beforeEnter: (to, from, next) => handleRouteProtection(to, next),
+      meta: {
+        layout: DefaultLayout,
+        requiresAuth: true,
+      },
+      beforeEnter: routeGuard,
     },
     {
       path: '/edit',
       name: 'edit',
       component: Create,
-      meta: { layout: DefaultLayout, requiresAuth: true },
-      beforeEnter: (to, from, next) => handleRouteProtection(to, next),
+      meta: {
+        layout: DefaultLayout,
+        requiresAuth: true,
+        requiredRole: 'ADMIN',
+      },
+      beforeEnter: routeGuard,
     },
     {
       path: '/create',
       name: 'create',
       component: Create,
+      meta: {
+        layout: DefaultLayout,
+        requiresAuth: true,
+        requiredRole: 'ADMIN',
+      },
+      beforeEnter: routeGuard,
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: Create,
       meta: { layout: DefaultLayout, requiresAuth: true },
-      beforeEnter: (to, from, next) => handleRouteProtection(to, next),
+      beforeEnter: routeGuard,
     },
     // {
     //   path: '/orders',

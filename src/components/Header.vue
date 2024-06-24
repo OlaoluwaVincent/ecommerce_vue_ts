@@ -1,12 +1,15 @@
 <template>
     <nav class="header">
         <div class="nav-items first">
-            <RouterLink to="/" class="nav-link"><v-icon>mdi-home</v-icon></RouterLink>
+            <RouterLink to="/" class="nav-link !text-base"><v-icon>mdi-home</v-icon></RouterLink>
             <RouterLink v-if="auth.token" to="/dashboard" class="nav-link !text-base">
                 <v-icon>mdi-view-dashboard</v-icon>
             </RouterLink>
+            <RouterLink v-if="auth.token" to="/order" class="nav-link !text-base">
+                <v-icon>mdi-shopping-search</v-icon>
+            </RouterLink>
 
-            <RouterLink to="/cart" class="nav-link">
+            <RouterLink to="/cart" class="nav-link !text-base">
                 <v-badge color="blue" :content="cartStore.cartLength">
                     <v-icon>mdi-cart</v-icon>
                 </v-badge>
@@ -62,7 +65,7 @@ const handleLogout = () => {
     text-align: center;
     text-decoration: none;
     color: maroon;
-    font-size: 16px;
+    /* font-size: 16px; */
     z-index: 10;
     position: relative;
     padding: 8px;

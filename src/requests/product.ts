@@ -1,20 +1,20 @@
 import type { AxiosError } from 'axios';
 import axiosInstance from './axios';
 import { reactive } from 'vue';
-import type { ProductResponse } from '@/utils/typings';
+import type { DataAndPagination, ProductResponse } from '@/utils/typings';
 
 async function getAllProducts() {
   const response = reactive<ProductResponse>({
     isLoading: true,
     error: '',
-    data: [],
+    data: {} as any,
   });
   try {
     const res = await axiosInstance.get('products');
     if (!res.data) {
       throw new Error('Please try again later');
     }
-    response.data = res.data;
+    response.data = res.data as DataAndPagination;
   } catch (error: any) {
     const error_axios = error as AxiosError;
     response.error = error_axios.response?.data as string;
@@ -28,14 +28,14 @@ async function getUserProducts(id: string) {
   const response = reactive<ProductResponse>({
     isLoading: true,
     error: '',
-    data: [],
+    data: [] as any,
   });
   try {
     const res = await axiosInstance.get('products/user/' + id);
     if (!res.data) {
       throw new Error('Please try again later');
     }
-    response.data = res.data;
+    response.data = res.data as DataAndPagination;
   } catch (error: any) {
     const error_axios = error as AxiosError;
     response.error = error_axios.response?.data as string;

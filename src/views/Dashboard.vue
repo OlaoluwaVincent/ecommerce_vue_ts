@@ -7,7 +7,7 @@
     </RouterLink>
 
     <main style="padding: 20px 5%;">
-        <section class="products">
+        <section class="flex overflow-x-scroll gap-8 w-full">
             <Product v-for="product in data?.data" :key="product.id" :product="product" owner />
         </section>
     </main>

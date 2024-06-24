@@ -29,6 +29,7 @@ import { useRouter } from "vue-router";
 const router = useRouter()
 
 const cartStore = useCartStore();
+
 const auth = useAuth()
 const total = computed(() =>
     cartStore.price +

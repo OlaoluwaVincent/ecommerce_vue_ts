@@ -23,7 +23,23 @@ export interface User {
 export interface ProductResponse {
   isLoading: boolean;
   error: string;
-  data: Product[];
+  data: DataAndPagination;
+}
+
+export interface DataAndPagination {
+  products: Product[];
+  pagination: Pagination;
+}
+
+export interface Pagination {
+  total: number;
+  page: number;
+  productPerPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  nextPage: number | null;
+  previousPage: number | null;
 }
 
 interface ProductImages {

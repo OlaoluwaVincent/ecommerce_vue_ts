@@ -32,8 +32,7 @@ const useAxiosLogin = async (
     auth.setUser(res.data);
     response.data = res.data;
   } catch (error: any) {
-    const error_axios = error as AxiosError;
-    response.error = error_axios.response?.data as string;
+    response.error = error.response?.data?.message as string;
   } finally {
     response.isLoading = false;
   }

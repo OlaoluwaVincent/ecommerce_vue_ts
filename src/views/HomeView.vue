@@ -2,14 +2,16 @@
 import { getAllProducts } from '@/requests/product';
 import Product from '../components/Product.vue';
 import { onMounted, ref } from 'vue';
-import type { ProductResponse } from '@/utils/typings';
 
 
 
-const data = ref<ProductResponse>();
+const data = ref();
+const navigation = ref()
 
 onMounted(async () => {
-  return data.value = await getAllProducts()
+  const res = await getAllProducts()
+  data.value = res.data.products;
+  navigation.value = res.data.pagination;
 })
 </script>
 
@@ -17,7 +19,7 @@ onMounted(async () => {
   <main style="padding: 20px 5%;">
     <h1 class="logo-h1">Shop with <span id="logo">EasyShop</span></h1>
     <section class="products">
-      <Product v-for="product in data?.data" :key="product.id" :product="product" />
+      <Product v-for="product in data" :key="product.id" :product="product" />
     </section>
   </main>
 </template>
@@ -36,8 +38,9 @@ onMounted(async () => {
 
 .products {
   display: grid;
-  grid-template-columns: minmax(200px, 300px);
+  grid-template-columns: minmax(100%, 200px);
   gap: 20px;
+  place-items: center;
 }
 
 @media (width>=540px) {
