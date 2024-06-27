@@ -102,10 +102,8 @@ async function login() {
 
     checks.loading = response.isLoading;
     if (response.data) {
-        console.log(response.data)
         router.push('/login?username=' + response.data.user?.username)
     } else {
-        console.log(response.error)
         data.error = response.error;
     }
 }

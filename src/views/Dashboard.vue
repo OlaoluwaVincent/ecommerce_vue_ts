@@ -1,33 +1,34 @@
 <template>
-    <h3 class="text-center font-bold text-red-900 text-xl my-5">
-        My Products
-    </h3>
-    <RouterLink :to="{ name: 'create' }">
-        <v-btn color="success" variant="tonal">New Product</v-btn>
-    </RouterLink>
+    <v-container class="pa-0">
+        <h3 class="text-center font-bold text-red-900 text-xl mb-5">
+            My Products
+        </h3>
 
-    <main style="padding: 20px 5%;">
-        <section class="flex overflow-x-scroll gap-8 w-full">
-            <Product v-for="product in data?.data" :key="product.id" :product="product" owner />
-        </section>
-    </main>
-    <section>
-        <router-view />
-    </section>
+        <Products :products="data" owner />
+    </v-container>
+
 </template>
-
 <script setup lang="ts">
-import Product from '@/components/Product.vue';
+import Products from '@/components/Products.vue';
 import { getUserProducts } from '@/requests/product';
 import useAuth from '@/stores/auth';
-import type { ProductResponse } from '@/utils/typings';
+import type { DataAndPagination, Pagination, Product as ProductType } from '@/utils/typings';
 import { onMounted, ref } from 'vue';
 
 const auth = useAuth()
-const data = ref<ProductResponse>();
+const data = ref<ProductType[]>([]);
+const navigation = ref<Pagination>();
 
 onMounted(async () => {
-    return data.value = await getUserProducts(auth.user!.id)
+    let res: { data: DataAndPagination };
+    if (auth.user?.role === "ADMIN") {
+        res = await getUserProducts(auth.user!.id)
+    } else {
+        //GET Orders
+        res = await getUserProducts(auth.user!.id)
+    }
+    data.value = res.data.products;
+    navigation.value = res.data.pagination;
 })
 </script>
 

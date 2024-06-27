@@ -1,54 +1,59 @@
 <template>
-    <section class="card bg-gray-900 max-w-[250px]">
-        <div class="title capitalize font-semibold text-sm sm:text-base">
-            <h3>{{ product.name }}</h3>
-        </div>
+    <v-card max-width="300" elevation="16">
+        <!-- TODO: Add route name -->
+        <!-- <router-link :to="{name:'#'}"> -->
+        <v-card-title>{{ product.name }}</v-card-title>
+        <!-- </router-link> -->
 
-        <div class="body">
-            <div class="w-[120px] aspect-square sm:aspect-auto sm:w-[230px] sm:h-[120px]">
-                <img :src="product.images[0].url" :alt="product.name">
-            </div>
-        </div>
+        <v-card-subtitle class="d-flex gap-4">
+            <p class="font-semibold" :class="discount && 'line-through opacity-80'">&#x20A6;{{ product.price }}</p>
+            <p v-if="discount" class="font-semibold">&#x20A6;{{ discount }}</p>
+        </v-card-subtitle>
 
-        <div class="flex justify-between items-center -mt-2">
-            <p :class="discount && 'text-red-500 line-through'"> &#x20A6;{{ product.price
-                }}</p>
+        <v-card-text>
+            <v-img :width="300" :height="200" aspect-ratio="16/9" cover :src="product.images[0].url" />
+        </v-card-text>
 
-            <p v-if="discount && product.price"> &#x20A6; {{ discount }}</p>
-        </div>
-        <div class="actions">
-            <v-btn v-if="!owner" color="success"> <v-icon>mdi-shopping</v-icon> </v-btn>
-            <v-btn v-if="owner" color="warning" @click="setProductAndNavigate">
+        <div class="flex gap-5 px-3 w-full justify-evenly pb-5">
+            <v-btn v-if="!owner" class="w-[45%]" :disabled="isLoading" color="success" elevated @click="handlePayment">
+                <v-icon>mdi-shopping</v-icon>
+            </v-btn>
+
+            <v-btn v-if="owner" class="w-[45%]" color="warning" @click="setProductAndNavigate">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
 
-
-            <v-btn v-if="owner" color="error" @click="deletePro">
+            <v-btn v-if="owner" class="w-[45%]" color="error" @click="deletePro">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
 
-            <v-btn v-if="!exists && !owner" color="primary" @click="addToCart(product)">
+            <v-btn v-if="!exists && !owner" class="w-[45%]" color="primary" @click="addToCart(product)">
                 <v-icon>mdi-cart</v-icon>
             </v-btn>
 
-            <v-btn v-if="exists && !owner" color="error" @click="removeFromCart(product.id)">
+            <v-btn v-if="exists && !owner" class="w-[45%]" color="error" @click="removeFromCart(product.id)">
                 <v-icon>mdi-cart-off</v-icon>
             </v-btn>
         </div>
-    </section>
+    </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue';
+import { computed, ref, type PropType } from 'vue';
 import useCartStore from '../stores/cart'
 import type { Product } from '../utils/typings'
 import { useProductStore } from '@/stores/product';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { deleteProduct } from '@/requests/product';
+import { initPayment } from '@/requests/payment';
+import useAuth from '@/stores/auth';
 
 const { addToCart, checkExisting, removeFromCart } = useCartStore()
 const productStore = useProductStore()
 const router = useRouter()
+const route = useRoute()
+const isLoading = ref(false)
+const auth = useAuth()
 
 const props = defineProps({
     product: {
@@ -76,42 +81,21 @@ function deletePro() {
     deleteProduct(props.product.id)
     router.push({ name: 'dashboard' });
 }
+
+async function handlePayment() {
+    if (!auth.token) router.push('/login?redirect=' + route.path)
+    isLoading.value = true
+    const res = await initPayment([props.product])
+    if (res.error) {
+        return alert(res.error)
+    }
+    window.location.href = res.data.authorization_url;
+    isLoading.value = res.isLoading
+}
+
 </script>
 
 <style scoped>
-.card {
-    color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    display: flex;
-    gap: 20px;
-    flex-direction: column;
-    width: 100%;
-}
-
-.title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.title button {
-    font-size: 13px;
-}
-
-.actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: -10px;
-    gap: 20px;
-}
-
-.body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 img {
     width: 100%;
     height: 100%;

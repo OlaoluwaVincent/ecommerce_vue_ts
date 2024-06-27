@@ -25,6 +25,21 @@ export interface ProductResponse {
   error: string;
   data: DataAndPagination;
 }
+export interface PResponse {
+  isLoading: boolean;
+  error: string;
+  data: Product;
+}
+
+export interface PaymentResponseData {
+  isLoading: boolean;
+  error: string;
+  data: {
+    access_code: string;
+    authorization_url: string;
+    reference: string;
+  };
+}
 
 export interface DataAndPagination {
   products: Product[];

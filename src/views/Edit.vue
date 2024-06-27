@@ -8,7 +8,7 @@
             </h4>
         </div>
 
-        <v-form v-model="valid" :loading="loading">
+        <v-form v-model="valid" :loading="data?.isLoading">
             <PreviewImage v-model="files" :images="productImages" @deleteImg="handleDeleteImg" />
             <v-text-field v-model="form.name" :rules="[rules.required]" label="Name" required></v-text-field>
 
@@ -112,7 +112,6 @@ const submit = async () => {
 
         data.value = isEdit.value ? await updateProduct(formData, productStore.product!.id) : await createProduct(formData)
         if (data.value.error) {
-            loading.value = data.value.isLoading;
             return;
         }
 

@@ -19,6 +19,8 @@ const useAuth = defineStore(
       return null;
     });
 
+    const isAdmin = computed(() => user.value.role === 'ADMIN');
+
     function setUser(data: User) {
       user.value = data;
     }
@@ -30,6 +32,7 @@ const useAuth = defineStore(
       user,
       token,
       refreshToken,
+      isAdmin,
       setUser,
       logout,
     };

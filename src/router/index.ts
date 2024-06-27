@@ -4,10 +4,12 @@ import DefaultLayout from '@/layout/DefaultLayout.vue';
 import AuthLayout from '@/layout/AuthLayout.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
-import handleRouteProtection from './protectedRoutes';
 import Dashboard from '@/views/Dashboard.vue';
 import Create from '@/views/Create.vue';
+import Edit from '@/views/Edit.vue';
+import Orders from '@/views/Orders.vue';
 import routeGuard from './roleGuard';
+import DashboardLayout from '@/layout/DashboardLayout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,50 +28,35 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard,
-      meta: {
-        layout: DefaultLayout,
-        requiresAuth: true,
-      },
+      component: DashboardLayout,
+      meta: { requiresAuth: true },
       beforeEnter: routeGuard,
+      children: [
+        {
+          path: '',
+          name: 'dashboard',
+          component: Dashboard,
+          beforeEnter: routeGuard,
+        },
+        {
+          path: '/edit',
+          name: 'edit',
+          component: Edit,
+          meta: { requiredRole: 'ADMIN' },
+        },
+        {
+          path: '/create',
+          name: 'create',
+          meta: { requiredRole: 'ADMIN' },
+          component: Create,
+        },
+        {
+          path: '/order',
+          name: 'orders',
+          component: Orders,
+        },
+      ],
     },
-    {
-      path: '/edit',
-      name: 'edit',
-      component: Create,
-      meta: {
-        layout: DefaultLayout,
-        requiresAuth: true,
-        requiredRole: 'ADMIN',
-      },
-      beforeEnter: routeGuard,
-    },
-    {
-      path: '/create',
-      name: 'create',
-      component: Create,
-      meta: {
-        layout: DefaultLayout,
-        requiresAuth: true,
-        requiredRole: 'ADMIN',
-      },
-      beforeEnter: routeGuard,
-    },
-    {
-      path: '/order',
-      name: 'order',
-      component: Create,
-      meta: { layout: DefaultLayout, requiresAuth: true },
-      beforeEnter: routeGuard,
-    },
-    // {
-    //   path: '/orders',
-    //   name: 'orders',
-    //   component: Dashboard,
-    //   meta: { layout: DefaultLayout, requiresAuth: true },
-    //   beforeEnter: (to, from, next) => handleRouteProtection(to, next),
-    // },
     {
       path: '/login',
       name: 'login',
