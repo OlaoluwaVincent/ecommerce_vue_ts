@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { getAllProducts } from '@/requests/product';
 import Products from '../components/Products.vue';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
+import { useQuery } from '@tanstack/vue-query'
 
 
 
-const data = ref();
 const navigation = ref()
 
-onMounted(async () => {
-  const res = await getAllProducts()
-  data.value = res.data.products;
-  navigation.value = res.data.pagination;
+// onMounted(async () => {
+const { data, isLoading } = useQuery({
+  queryKey: ['products'],
+  queryFn: getAllProducts,
 })
+
+
 </script>
 
 <template>
   <main>
     <h1 class="logo-h1">Shop with <span id="logo">EasyShop</span></h1>
-    <Products v-if="data" :products="data" />
+    <v-container v-if="isLoading" class="animate-pulse text-slate-600 font-semibold">Loading...</v-container>
+    <Products v-if="data" :products="data.products" />
   </main>
 </template>
 

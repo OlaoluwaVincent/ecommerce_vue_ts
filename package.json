@@ -11,6 +11,8 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^5.48.2",
+    "@tanstack/vue-query-devtools": "^5.48.2",
     "axios": "^1.7.2",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.1.7",

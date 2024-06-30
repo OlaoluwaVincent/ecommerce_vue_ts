@@ -1,6 +1,6 @@
 <template>
     <form class="login" @submit.prevent="login">
-        <p v-if="data.error" class="text-red-500">{{ data.error }}</p>
+        <p v-if="isError" class="text-red-500">{{ error }}</p>
         <div>
             <InputLabel label="username" />
             <InputText v-model="data.username" id="username" placeholder="Enter Username" />
@@ -9,7 +9,7 @@
             <InputLabel label="password" />
             <InputText v-model="data.password" id="password" type="password" placeholder="Enter password" />
         </div>
-        <v-btn color="blue-darken-3" type="submit" block :disabled="loading">Login</v-btn>
+        <v-btn color="blue-darken-3" type="submit" block :disabled="isPending">Login</v-btn>
 
         <div>
             <p>Dont have an account? <router-link to="/register" class="text-blue">Register</router-link></p>
@@ -19,39 +19,41 @@
 
 <script setup lang="ts">
 import InputLabel from '@/components/InputLabel.vue';
-import InputText from '@/components/InputText.vue'
-import useAxiosLogin from '@/requests/login';
+import InputText from '@/components/InputText.vue';
+import { loginUser } from '@/requests/user';
 import useAuth from '@/stores/auth';
-import { onBeforeMount, reactive, ref } from 'vue';
+import { useMutation } from '@tanstack/vue-query';
+import { onBeforeMount, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-const router = useRouter()
-const route = useRoute()
-const auth = useAuth()
-const loading = ref(false)
+const router = useRouter();
+const route = useRoute();
+const auth = useAuth();
 
 const data = reactive({
     username: route.query.username?.toString() || '',
     password: '',
-    error: ''
-})
+});
 
 onBeforeMount(() => {
-    if (auth.token) return router.push('/dashboard')
-})
+    if (auth.token) return router.push('/dashboard');
+});
 
-async function login() {
-    const response = await useAxiosLogin(data.username, data.password)
-    loading.value = response.isLoading;
-    if (response.data) {
-        const location = route.query.redirect?.toString() || '/dashboard'
-        router.push(location)
-    } else {
-        data.error = response.error;
-    }
+const { isError, error, mutate, isPending } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (user) => {
+        const location = route.query.redirect?.toString() || '/dashboard';
+        auth.setUser(user)
+        router.push(location);
+
+    },
+});
+
+function login() {
+    mutate({ username: data.username, password: data.password });
 }
-
 </script>
+
 
 <style scoped>
 .login {

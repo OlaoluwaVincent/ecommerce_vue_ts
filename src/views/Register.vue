@@ -41,9 +41,9 @@
 <script setup lang="ts">
 import InputLabel from '@/components/InputLabel.vue';
 import InputText from '@/components/InputText.vue';
-import useAxiosRegister from '@/requests/register';
+import { createUser } from '@/requests/user';
 import useAuth from '@/stores/auth';
-import { onBeforeMount, reactive, ref, type VNodeRef } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const auth = useAuth()
@@ -93,19 +93,19 @@ const data = reactive({
 })
 
 async function login() {
-    const response = await useAxiosRegister({
+    checks.loading = true;
+    const response = await createUser({
         email: data.email,
         fullname: data.fullname,
         password: data.password,
         username: data.username,
     });
 
-    checks.loading = response.isLoading;
-    if (response.data) {
-        router.push('/login?username=' + response.data.user?.username)
-    } else {
+    if (response.error) {
         data.error = response.error;
     }
+    router.push('/login?username=' + response.data)
+
 }
 </script>
 

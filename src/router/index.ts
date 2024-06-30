@@ -27,6 +27,12 @@ const router = createRouter({
       meta: { layout: DefaultLayout, requiresAuth: true },
     },
     {
+      path: '/product/:id',
+      name: 'product',
+      component: () => import('@/views/ProductView.vue'),
+      meta: { layout: DefaultLayout },
+    },
+    {
       path: '/dashboard',
       component: DashboardLayout,
       meta: { requiresAuth: true },

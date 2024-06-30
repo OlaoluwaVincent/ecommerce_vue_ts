@@ -1,9 +1,13 @@
 import useAuth from '@/stores/auth';
 import { jwtDecode } from 'jwt-decode';
-import axios, { type AxiosInstance } from 'axios';
+import axios, { AxiosError, type AxiosInstance } from 'axios';
+import { reactive } from 'vue';
+import type { RequestResponseType, ResponseData } from '@/utils/typings';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.DEV
+    ? import.meta.env.VITE_LOCAL_URL
+    : import.meta.env.VITE_BACKEND_URL,
 });
 
 // Function to refresh token
@@ -62,3 +66,39 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
+
+export async function handleRequest<T>(method: 'get' | 'delete', url: string) {
+  try {
+    const res = await axiosInstance[method](url);
+    if (!res.data) {
+      throw new Error('Please try again later');
+    }
+    // response.data = res.data;
+    return res.data as ResponseData<T>; // Return the data
+  } catch (error: any) {
+    // response.error = error.response?.data?.message as string;
+    throw error; // Throw the error to be handled by Vue Query
+  }
+}
+
+export async function handleSubmit<T>(
+  method: 'post' | 'put',
+  url: string,
+  data: any
+) {
+  const response = reactive<RequestResponseType<ResponseData<T>>>({
+    isLoading: true,
+    error: '',
+    data: {} as ResponseData<T>,
+  });
+
+  try {
+    const res = await axiosInstance[method](url, data);
+    if (!res.data) {
+      throw new Error('Please try again later');
+    }
+    return res.data as ResponseData<T>;
+  } catch (error: any) {
+    throw error.response.data.message || error.message; // Throw the error to be handled by Vue Query
+  }
+}

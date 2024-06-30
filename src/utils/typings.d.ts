@@ -7,28 +7,25 @@ export interface Product {
   description: string;
   quantity: number;
   userId: string | null;
-  refreshToken: string;
 }
 
 export interface User {
   id: string;
-  email: string;
   name: string;
+  username: string;
+  email: string;
   role: string;
   token: string;
   refreshToken: string;
-  username: string;
 }
 
-export interface ProductResponse {
-  isLoading: boolean;
-  error: string;
-  data: DataAndPagination;
-}
-export interface PResponse {
-  isLoading: boolean;
-  error: string;
-  data: Product;
+export interface UserDetails {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  role: string;
+  updatedAt: Date;
 }
 
 export interface PaymentResponseData {
@@ -39,11 +36,6 @@ export interface PaymentResponseData {
     authorization_url: string;
     reference: string;
   };
-}
-
-export interface DataAndPagination {
-  products: Product[];
-  pagination: Pagination;
 }
 
 export interface Pagination {
@@ -61,3 +53,32 @@ interface ProductImages {
   url: string;
   public_id: string;
 }
+export interface RequestResponseType<T> {
+  isLoading: boolean;
+  error: string;
+  data: T;
+}
+export interface Contents {
+  id: string;
+}
+
+export interface ProductsWithPagination {
+  products: Contents[];
+  pagination: Pagination;
+}
+
+export interface Order {
+  id: string;
+  productId: string;
+  quantity: number;
+  userId: string;
+  deliveryStatus: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface OrdersWithPagination {
+  orders: Contents[];
+  pagination: Pagination;
+}
+
+export type ResponseData<T> = T;

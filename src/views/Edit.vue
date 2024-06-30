@@ -27,8 +27,8 @@
                 {{ data.error }}
             </h4>
 
-            <v-btn @click="submit" block :disabled="loading" :color="isEdit ? 'warning' : 'success'">
-                {{ isEdit ? 'Update' : "Create" }}
+            <v-btn @click="submit" block :disabled="isPending" color="warning">
+                Update
             </v-btn>
         </v-form>
 
@@ -37,19 +37,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, toRaw } from 'vue';
+import { reactive, ref, toRaw } from 'vue';
 import PreviewImage from '@/components/PreviewImage.vue'
-import { createProduct, updateProduct } from '@/requests/product';
+import { updateProduct } from '@/requests/product';
 import { useProductStore } from '@/stores/product';
 import type { ProductImages, Product } from '@/utils/typings';
 import { useRoute, useRouter } from 'vue-router';
+import { useMutation } from '@tanstack/vue-query';
+
+const { isPending, isError, error, mutate } = useMutation({
+    mutationFn: (formdata: FormData) => updateProduct(formdata, productStore.product!.id),
+    onSuccess: () => router.push({ name: "dashboard" })
+})
 
 
 const productStore = useProductStore();
 const route = useRoute()
 const router = useRouter()
-
-const isEdit = computed(() => route.name === 'edit')
 
 interface ResponseFromCreate {
     isLoading: boolean;
@@ -59,26 +63,15 @@ interface ResponseFromCreate {
 
 const files = ref<File[]>([]);
 const deletedImages = ref<ProductImages[]>([])
-const productImages = ref(isEdit ? productStore.product?.images : [])
+const productImages = ref(productStore.product?.images)
 const data = ref<ResponseFromCreate>()
-const loading = ref(false)
 
-interface ProductForm {
-    name: string;
-    description: string;
-    price: number | undefined;
-    discount: number | undefined;
-    quantity: number;
-}
-
-
-
-const form = reactive<ProductForm>({
-    name: isEdit.value ? productStore.product!.name : '',
-    description: isEdit.value ? productStore.product!.description : '',
-    price: isEdit.value ? productStore.product?.price : undefined,
-    discount: isEdit.value ? productStore.product?.discount : undefined,
-    quantity: isEdit.value ? productStore.product!.quantity : 1,
+const form = reactive({
+    name: productStore.product?.name as string,
+    description: productStore.product?.description as string,
+    price: productStore.product?.price,
+    discount: productStore.product?.discount,
+    quantity: productStore.product?.quantity as number,
 });
 
 const valid = ref(false);
@@ -88,38 +81,28 @@ const rules = {
 };
 
 function handleDeleteImg(data: ProductImages) {
+    // Update the deleted Images
     deletedImages.value.push(data);
-
     productImages.value = productImages.value?.filter((img) => !deletedImages.value.some((del) => del.public_id === img.public_id))
 }
 
 const submit = async () => {
     if (valid.value) {
         const formData = new FormData();
-        loading.value = true;
 
         formData.append('name', form.name);
         formData.append('description', form.description);
         if (form.price !== undefined) formData.append('price', form.price.toString());
         if (form.discount && form.discount !== undefined) formData.append('discount', form.discount.toString());
-        formData.append('quantity', form.quantity.toString());
-        if (isEdit.value) formData.append('deletedImages', JSON.stringify(deletedImages.value))
+        formData.append('quantity', form.quantity!.toString());
+        formData.append('deletedImages', JSON.stringify(deletedImages.value))
 
         const rawFiles = toRaw(files.value);
         rawFiles.forEach((file) => {
             formData.append('images', file);
         });
 
-        data.value = isEdit.value ? await updateProduct(formData, productStore.product!.id) : await createProduct(formData)
-        if (data.value.error) {
-            return;
-        }
-
-        if (data.value.data !== null && data.value.data !== undefined) {
-            loading.value = data.value.isLoading;
-            router.push({ name: "dashboard" })
-        }
-
+        mutate(formData)
     }
 };
 
