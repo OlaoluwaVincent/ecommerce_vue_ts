@@ -32,10 +32,12 @@
   import { initPayment } from '@/requests/payment';
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
+  import { ref } from 'vue';
 
   const router = useRouter();
 
   const cartStore = useCartStore();
+  const isLoading = ref(false);
 
   const auth = useAuth();
   const total = computed(() => cartStore.price - cartStore.discount);

@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import type { PResponse, PaymentResponseData, Product } from '../utils/typings';
+import type { PaymentResponseData, Product } from '../utils/typings';
 import axiosInstance from './axios';
 
 async function initPayment(data: Product[]) {
