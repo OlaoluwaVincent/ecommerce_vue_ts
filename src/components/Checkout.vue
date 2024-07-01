@@ -19,7 +19,7 @@
       color="black"
       @click="handleClick"
       block
-      :disabled="!cartStore.price"
+      :disabled="!cartStore.price || isPending"
       >Proceed to Checkout</v-btn
     >
     <!-- </Link> -->
@@ -33,26 +33,25 @@
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
   import { ref } from 'vue';
+  import { useMutation } from '@tanstack/vue-query';
 
   const router = useRouter();
-
   const cartStore = useCartStore();
-  const isLoading = ref(false);
-
   const auth = useAuth();
+
   const total = computed(() => cartStore.price - cartStore.discount);
 
+  const { mutate, isPending } = useMutation({
+    mutationKey: ['initPayment'],
+    mutationFn: initPayment,
+    onSuccess: (data) => {
+      window.location.href = data.authorization_url;
+    },
+  });
+
   async function handleClick() {
-    if (!auth.user) {
-      return router.push('/login?redirect=cart');
-    }
-    // console.log(cartStore.cart)
-    const res = await initPayment(cartStore.cart);
-    if (res.error) {
-      return alert(res.error);
-    }
-    window.location.href = res.data.authorization_url;
-    isLoading.value = res.isLoading;
+    if (!auth.token) router.push('/login?redirect=cart');
+    mutate(cartStore.cart);
   }
 </script>
 

@@ -94,7 +94,7 @@
   import { deleteProduct, getProduct } from '@/requests/product';
   import { initPayment } from '@/requests/payment';
   import useAuth from '@/stores/auth';
-  import { useQuery } from '@tanstack/vue-query';
+  import { useMutation, useQuery } from '@tanstack/vue-query';
 
   const { addToCart, checkExisting, removeFromCart } = useCartStore();
   const productStore = useProductStore();
@@ -141,16 +141,20 @@
     router.push({ name: 'dashboard' });
   }
 
+  const { mutate } = useMutation({
+    mutationKey: ['initPayment'],
+    mutationFn: initPayment,
+    onSuccess: (data) => {
+      window.location.href = data.authorization_url;
+    },
+  });
+
   async function handlePayment() {
     if (!auth.token) router.push('/login?redirect=' + route.path);
-    isLoading.value = true;
-    const res = await initPayment([product.value!]);
-    if (res.error) {
-      return alert(res.error);
-    }
-    window.location.href = res.data.authorization_url;
-    isLoading.value = res.isLoading;
+    if (product.value) mutate([product.value]);
   }
+
+  mutate([product.value!]);
 </script>
 
 <style scoped>
