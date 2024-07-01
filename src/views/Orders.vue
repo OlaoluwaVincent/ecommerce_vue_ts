@@ -1,24 +1,38 @@
 <template>
-    <v-container>
-        <h1> Orders page</h1>
-        <p v-if="isLoading" class="animate-pulse font-bold">Loading...</p>
-    </v-container>
+  <v-container>
+    <h1 class="text-h4">My Orders</h1>
+    <p
+      v-if="isLoading"
+      class="animate-pulse font-bold">
+      Loading...
+    </p>
+    <p
+      v-else-if="isError"
+      class="text-red-500">
+      {{ error?.message }}
+    </p>
+    <section v-if="data">
+      <OrderCard
+        v-for="order in data.orders"
+        :key="order.id"
+        :orderId="order.id" />
+    </section>
+  </v-container>
 </template>
 
 <script setup lang="ts">
-import useAuth from '@/stores/auth';
-import { useQuery } from '@tanstack/vue-query';
-import { computed } from 'vue';
-import { getOrders } from '@/requests/orders'
+  import useAuth from '@/stores/auth';
+  import { useQuery } from '@tanstack/vue-query';
+  import { getOrders, getUserOrders } from '@/requests/orders';
+  import OrderCard from '@/components/OrderCard.vue';
 
-const auth = useAuth()
-const isAdmin = computed(() => auth.user?.role === 'ADMIN')
+  const auth = useAuth();
 
-const { isLoading, isError, error, data } = useQuery({
+  const { isLoading, isError, error, data } = useQuery({
     queryKey: ['orders'],
-    queryFn: getOrders
-})
-console.log(data.value)
+    queryFn: auth.isAdmin ? getOrders : () => getUserOrders(auth.user!.id),
+    // queryFn: () => getUserOrders(auth.user!.id),
+  });
 </script>
 
 <style scoped></style>

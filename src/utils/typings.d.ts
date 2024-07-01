@@ -2,8 +2,8 @@ export interface Product {
   id: string;
   name: string;
   images: ProductImages[];
-  price: number | undefined;
-  discount: number | undefined;
+  price: number;
+  discount?: number;
   description: string;
   quantity: number;
   userId: string | null;
@@ -79,6 +79,10 @@ export interface Order {
 export interface OrdersWithPagination {
   orders: Contents[];
   pagination: Pagination;
+}
+
+export interface OrderWithProducts extends Order {
+  product: Product;
 }
 
 export type ResponseData<T> = T;
