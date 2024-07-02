@@ -8,7 +8,6 @@ function calculateFutureDate(baseDate: Date, daysToAdd: number) {
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
-    second: 'numeric',
     timeZone: 'Africa/Lagos', // Nigeria's time zone
     // timeZoneName: 'short',
   };

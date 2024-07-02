@@ -36,7 +36,7 @@
               :color="color"
               variant="elevated" />
 
-            <div v-if="auth.isAdmin && data?.deliveryStatus === 'pending'">
+            <div v-if="auth.isAdmin && data?.deliveryStatus === 'Pending'">
               <v-btn
                 class="ms-2"
                 size="small"
