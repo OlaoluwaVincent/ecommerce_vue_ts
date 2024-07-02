@@ -32,7 +32,6 @@
   import { initPayment } from '@/requests/payment';
   import { computed } from 'vue';
   import { useRouter } from 'vue-router';
-  import { ref } from 'vue';
   import { useMutation } from '@tanstack/vue-query';
 
   const router = useRouter();

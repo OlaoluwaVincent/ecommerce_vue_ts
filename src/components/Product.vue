@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!product?.id">loading...</div>
+  <div v-if="!data?.id">loading...</div>
   <v-card
     v-else
     max-width="200"
@@ -9,57 +9,27 @@
       <v-img
         aspect-ratio="1"
         cover
-        :src="product.images[0].url" />
+        :src="data.images[0].url" />
+
       <div
         class="absolute hidden group-hover:flex w-full z-10 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 gap-5 px-3 pb-5 bg-slate-400/40 h-full justify-center align-center ps-4">
         <v-btn
-          v-if="!owner"
-          icon
-          elevated
-          rounded="sm"
-          :disabled="isLoading"
-          color="success"
-          @click="handlePayment">
-          <v-icon>mdi-shopping</v-icon>
-        </v-btn>
-
-        <v-btn
-          v-if="owner"
-          icon
-          elevated
-          rounded="sm"
-          color="warning"
-          @click="setProductAndNavigateEdit">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-
-        <v-btn
-          v-if="owner"
-          icon
-          elevated
-          rounded="sm"
-          color="error"
-          @click="deletePro">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-
-        <v-btn
-          v-if="!exists && !owner"
+          v-if="!exists"
           icon
           elevated
           rounded="sm"
           color="primary"
-          @click="addToCart(product)">
+          @click="addToCart(data)">
           <v-icon>mdi-cart</v-icon>
         </v-btn>
 
         <v-btn
-          v-if="exists && !owner"
+          v-if="exists"
           icon
           elevated
           rounded="sm"
           color="error"
-          @click="removeFromCart(product.id)">
+          @click="removeFromCart(data.id)">
           <v-icon>mdi-cart-off</v-icon>
         </v-btn>
       </div>
@@ -68,14 +38,14 @@
     <v-card-title
       @click="setProductAndNavigateProduct"
       class="pb-1 !text-sm !sm:text-base !lg:text-[20px] cursor-pointer">
-      {{ product.name }}
+      {{ data.name }}
     </v-card-title>
 
     <v-card-subtitle class="d-flex gap-4 text-gray-900 pb-2">
       <h5
         class="font-bold"
         :class="discount && 'line-through opacity-80'">
-        &#x20A6; {{ product.price }}
+        &#x20A6; {{ data.price }}
       </h5>
       <p
         v-if="discount"
@@ -90,71 +60,40 @@
   import { computed } from 'vue';
   import useCartStore from '../stores/cart';
   import { useProductStore } from '@/stores/product';
-  import { useRoute, useRouter } from 'vue-router';
-  import { deleteProduct, getProduct } from '@/requests/product';
-  import { initPayment } from '@/requests/payment';
-  import useAuth from '@/stores/auth';
-  import { useMutation, useQuery } from '@tanstack/vue-query';
+  import { useRouter } from 'vue-router';
+  import { getProduct } from '@/requests/product';
+  import { useQuery } from '@tanstack/vue-query';
 
   const { addToCart, checkExisting, removeFromCart } = useCartStore();
   const productStore = useProductStore();
   const router = useRouter();
-  const route = useRoute();
-  const auth = useAuth();
 
   const props = defineProps({
     productId: {
       type: String,
       required: true,
     },
-    owner: Boolean,
   });
 
-  const { data: product, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['product', props.productId],
     queryFn: () => getProduct(props.productId),
   });
 
-  const exists = computed(() => checkExisting(product.value!.id));
+  const exists = computed(() => checkExisting(data.value!.id));
 
   const discount = computed(() => {
-    if (product.value!.price && product.value!.discount) {
+    if (data.value!.price && data.value!.discount) {
       return (
-        product.value!.price -
-        product.value!.price * (product.value!.discount / 100)
+        data.value!.price - data.value!.price * (data.value!.discount / 100)
       );
     }
   });
 
-  const setProductAndNavigateEdit = () => {
-    productStore.setProduct(product.value!);
-    router.push({ name: 'edit' });
-  };
-
   const setProductAndNavigateProduct = () => {
-    productStore.setProduct(product.value!);
-    router.push({ name: 'product', params: { id: product.value?.id } });
+    productStore.setProduct(data.value!);
+    router.push({ name: 'product', params: { id: data.value?.id } });
   };
-
-  function deletePro() {
-    deleteProduct(product.value!.id);
-    router.push({ name: 'dashboard' });
-  }
-
-  const { mutate } = useMutation({
-    mutationKey: ['initPayment'],
-    mutationFn: initPayment,
-    onSuccess: (data) => {
-      window.location.href = data.authorization_url;
-    },
-  });
-
-  async function handlePayment() {
-    if (!auth.token) router.push('/login?redirect=' + route.path);
-    if (product.value) mutate([product.value]);
-  }
-
-  mutate([product.value!]);
 </script>
 
 <style scoped>

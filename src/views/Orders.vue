@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <h1 class="text-h4">My Orders</h1>
     <p
       v-if="isLoading"
@@ -17,7 +17,7 @@
         :key="order.id"
         :orderId="order.id" />
     </section>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -22,7 +22,9 @@
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </div>
-      <div class="flex justify-between w-max gap-4 items-center">
+      <div
+        v-if="product.quantity > 1"
+        class="flex justify-between w-max gap-4 items-center">
         <v-btn
           flat
           icon

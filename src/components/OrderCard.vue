@@ -7,16 +7,16 @@
   <v-col
     v-else
     cols="12"
-    lg="8">
+    md="8">
     <v-card color="#1F7087">
-      <div class="d-flex flex-no-wrap justify-space-between">
+      <div class="d-flex flex-no-wrap justify-space-between items-center">
         <div>
           <v-card-title class="text-h5">
             {{ data?.product.name }}
             <p
               v-show="data?.deliveryStatus === 'accepted'"
               class="text-slate-300 text-sm">
-              Expeted Delivery Date:
+              Expeted Delivery Date: <br />
               <span class="font-bold">{{ daysLeft }}</span>
             </p>
           </v-card-title>
@@ -58,7 +58,7 @@
         <v-avatar
           class="ma-3"
           rounded="0"
-          size="125">
+          size="100">
           <v-img :src="data?.product.images[0].url"></v-img>
         </v-avatar>
       </div>
