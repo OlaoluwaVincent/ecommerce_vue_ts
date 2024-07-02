@@ -1,10 +1,12 @@
 <template>
-  <article class="flex gap-2 p-5 rounded-lg w-full bg-gray-900 text-slate-200">
+  <article
+    class="flex gap-2 p-5 rounded-lg w-full bg-gray-900 text-slate-200 items-center">
     <div class="min-w-[100px] w-[100px]">
-      <img
-        class="w-full h-full aspect-square"
+      <v-img
+        aspect-ratio="1"
+        cover
         :src="product.images[0].url"
-        :alt="product.name" />
+        :alt="product.name"></v-img>
     </div>
     <div class="flex flex-col gap-3 w-full">
       <div class="flex gap-2 justify-between">
@@ -28,17 +30,21 @@
         <v-btn
           flat
           icon
+          rounded="lg"
           color="primary"
           @click="cartStore.increaseQuantity(product.id)">
-          <v-icon>mdi-plus</v-icon>
+          <v-icon :size="$vuetify.display.mdAndDown ? 24 : 30">mdi-plus</v-icon>
         </v-btn>
         {{ product.originalQuantity }}
         <v-btn
           flat
           icon
+          rounded="lg"
           color="primary"
           @click="cartStore.decreaseQuantity(product.id)">
-          <v-icon>mdi-minus</v-icon>
+          <v-icon :size="$vuetify.display.mdAndDown ? 24 : 30"
+            >mdi-minus</v-icon
+          >
         </v-btn>
       </div>
     </div>
