@@ -1,15 +1,36 @@
 <template>
-  <section class="d-flex flex-col gap-5 max-w-[500px] mx-auto">
+  <section class="flex flex-col gap-5 max-w-[500px] mx-auto">
     <h1 class="text-center text-h4">{{ product?.name }}</h1>
-    <p class="text-h5 whitespace-pre">{{ product?.description }}</p>
-    <p class="text-body-1">Available Quantity: {{ product?.quantity }}</p>
+    <article class="flex gap-3 flex-col max-w-[500px]">
+      <p
+        class="text-subtitle-2 text-justify text-md-body-1 !whitespace-pre-wrap">
+        {{ product?.description }}
+      </p>
+      <p
+        class="text-body-1"
+        :class="productStore.discount && 'line-through text-red-700'">
+        <b>Price:</b> {{ product?.price }}
+      </p>
+      <p
+        v-if="productStore.discount && product"
+        class="text-h6 font-weigt-bold">
+        <b>Payable Amount:</b>
+        {{ product.price * product?.originalQuantity - productStore.discount }}
+      </p>
+      <p class="text-body-1">
+        <b>Available Quantity:</b> {{ product?.quantity }}
+      </p>
+    </article>
 
-    <div class="grid grid-cols-2 gap-3 sm:max-w-[500px] w-full mx-auto">
+    <div
+      class="flex items-center justify-center gap-3 sm:max-w-[500px] w-fit mx-auto">
       <v-img
         v-for="img in product?.images"
         :key="img.public_id"
         aspect-ratio="1"
         cover
+        :height="220"
+        :width="220"
         :src="img.url" />
     </div>
 
@@ -65,24 +86,30 @@
       </v-btn>
     </div>
 
-    <p class="text-decoration-underline text-center mt-10">Quantity to Order</p>
-    <div class="flex justify-between w-max gap-4 items-center mx-auto">
-      <v-btn
-        flat
-        icon
-        color="primary"
-        @click="productStore.increaseQuantity()">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      {{ product?.originalQuantity }}
-      <v-btn
-        flat
-        icon
-        color="primary"
-        @click="productStore.decreaseQuantity()">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-    </div>
+    <aside
+      v-if="product?.quantity && product?.quantity > 1"
+      class="d-block">
+      <p class="text-decoration-underline text-center mt-10">
+        Quantity to Order
+      </p>
+      <div class="flex justify-between w-max gap-4 items-center mx-auto">
+        <v-btn
+          flat
+          icon
+          color="primary"
+          @click="productStore.increaseQuantity()">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        {{ product?.originalQuantity }}
+        <v-btn
+          flat
+          icon
+          color="primary"
+          @click="productStore.decreaseQuantity()">
+          <v-icon>mdi-minus</v-icon>
+        </v-btn>
+      </div>
+    </aside>
   </section>
 </template>
 
@@ -104,10 +131,6 @@
 
   const product = productStore.product;
   const exists = computed(() => checkExisting(productStore.product!.id));
-
-  //   onUnmounted(() => {
-  //     productStore.emptyProduct();
-  //   });
 
   const setProductAndNavigateEdit = () => {
     router.push({ name: 'edit' });

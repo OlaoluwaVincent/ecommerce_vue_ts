@@ -11,11 +11,17 @@
         label="Name"
         required></v-text-field>
 
-      <v-text-field
+      <!-- <v-text-field
         v-model="form.description"
         :rules="[rules.required]"
         label="Description"
-        required></v-text-field>
+        required></v-text-field> -->
+
+      <v-textarea
+        v-model="form.description"
+        :rules="[rules.required]"
+        label="Description"
+        required></v-textarea>
 
       <v-text-field
         v-model="form.price"
