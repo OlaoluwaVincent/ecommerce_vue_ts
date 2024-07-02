@@ -111,7 +111,7 @@
   });
 
   const daysLeft = computed(() => {
-    if (data.value) return calculateFutureDate(7);
+    if (data.value) return calculateFutureDate(data.value.updatedAt, 7);
   });
 
   function handleReject() {

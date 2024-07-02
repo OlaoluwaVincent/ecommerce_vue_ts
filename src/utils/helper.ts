@@ -1,5 +1,5 @@
-function calculateFutureDate(daysToAdd: number) {
-  const date = new Date();
+function calculateFutureDate(baseDate: Date, daysToAdd: number) {
+  const date = new Date(baseDate);
   date.setDate(date.getDate() + daysToAdd);
 
   const options: Intl.DateTimeFormatOptions = {
